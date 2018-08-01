@@ -53,6 +53,8 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Please can we use your Photo&apos;s</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Please can we use your Camera</string>
+	<string>This app needs access to the camera to take photos.</string>
+	<key>Custom Property</key>
+	<string></string>
 </dict>
 </plist>

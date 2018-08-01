@@ -144,6 +144,9 @@
     <PackageReference Include="Xamarin.CardIO.iOS">
       <Version>5.4.1</Version>
     </PackageReference>
+    <PackageReference Include="Xam.Plugin.Media">
+      <Version>4.0.1.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DrawIOForms\DrawIOForms.csproj">
