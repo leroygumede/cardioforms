@@ -5,7 +5,7 @@ using DrawIOForms.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(DrawIOForms.Views.CreditCardEntryPage), typeof(DrawIOForms.Views.CreditCardEntryPage))]
+[assembly: ExportRenderer(typeof(DrawIOForms.iOS.Renderers.CreditCardEntryPageRenderer), typeof(DrawIOForms.iOS.Renderers.CreditCardEntryPageRenderer))]
 namespace DrawIOForms.iOS.Renderers
 {
     public class CreditCardEntryPageRenderer : PageRenderer

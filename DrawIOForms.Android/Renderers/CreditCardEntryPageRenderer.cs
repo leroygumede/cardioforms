@@ -4,8 +4,9 @@ using Card.IO;
 using DrawIOForms.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
+using System;
 
-[assembly: ExportRenderer(typeof(DrawIOForms.Views.CreditCardEntryPage), typeof(DrawIOForms.Views.CreditCardEntryPage))]
+[assembly: ExportRenderer(typeof(DrawIOForms.Droid.Renderers.CreditCardEntryPageRenderer), typeof(DrawIOForms.Droid.Renderers.CreditCardEntryPageRenderer))]
 namespace DrawIOForms.Droid.Renderers
 {
 
@@ -28,6 +29,7 @@ namespace DrawIOForms.Droid.Renderers
                 return;
             }
 
+            Console.WriteLine("Opening Page");
             ccPage = e.NewElement as CreditCardEntryPage;
 
             // Launch the Card.IO activity as soon as we go into the renderer.
