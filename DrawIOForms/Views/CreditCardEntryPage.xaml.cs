@@ -8,7 +8,9 @@ namespace DrawIOForms.Views
     {
         public CreditCardEntryPage()
         {
+            cardIOConfig = new CardIOConfig() { CollectCardholderName = true, HideCardIOLogo = false, RequireCvv = true, RequireExpiry = true };
             InitializeComponent();
+
         }
 
         public delegate void ScanSucceededEventHandler(object sender, CreditCard_PCL ccPCL);

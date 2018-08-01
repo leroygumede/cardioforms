@@ -5,11 +5,22 @@ using DrawIOForms.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using System;
+using Android.Runtime;
 
-[assembly: ExportRenderer(typeof(DrawIOForms.Droid.Renderers.CreditCardEntryPageRenderer), typeof(DrawIOForms.Droid.Renderers.CreditCardEntryPageRenderer))]
+[assembly: ExportRenderer(typeof(CreditCardEntryPage), typeof(DrawIOForms.Droid.Renderers.CreditCardEntryPageRenderer))]
 namespace DrawIOForms.Droid.Renderers
 {
+    public class ActivityResultEventArgs : EventArgs
+    {
+        public int RequestCode { get; set; }
+        public Result ResultCode { get; set; }
+        public Intent Data { get; set; }
 
+        public ActivityResultEventArgs() : base()
+        {
+
+        }
+    }
 
     public class CreditCardEntryPageRenderer : PageRenderer
     {
@@ -23,6 +34,16 @@ namespace DrawIOForms.Droid.Renderers
         protected override void OnElementChanged(ElementChangedEventArgs<Page> e)
         {
             base.OnElementChanged(e);
+            var activity = Context as MainActivity;
+
+            if (e.OldElement != null)
+            {
+                activity.ActivityResult -= Activity_ActivityResult;
+            }
+            if (e.NewElement != null)
+            {
+                activity.ActivityResult += Activity_ActivityResult;
+            }
 
             if (e.OldElement != null || Element == null)
             {
@@ -33,7 +54,7 @@ namespace DrawIOForms.Droid.Renderers
             ccPage = e.NewElement as CreditCardEntryPage;
 
             // Launch the Card.IO activity as soon as we go into the renderer.
-            Activity activity = this.Context as Activity;
+
 
             var intent = new Intent(activity, typeof(CardIOActivity));
             intent.PutExtra(CardIOActivity.ExtraRequireExpiry, ccPage.cardIOConfig.RequireExpiry);
@@ -47,6 +68,19 @@ namespace DrawIOForms.Droid.Renderers
             if (!string.IsNullOrEmpty(ccPage.cardIOConfig.ScanInstructions)) intent.PutExtra(CardIOActivity.ExtraScanInstructions, ccPage.cardIOConfig.ScanInstructions);
 
             activity.StartActivityForResult(intent, 101);
+        }
+
+        void Activity_ActivityResult(object sender, ActivityResultEventArgs e)
+        {
+
+            if (e.Data != null)
+            {
+
+                var card = e.Data.GetParcelableExtra(CardIOActivity.ExtraScanResult).JavaCast<CreditCard>();
+                Console.WriteLine($"Got result: {card.RedactedCardNumber}");
+            }
+
+
         }
     }
 }
