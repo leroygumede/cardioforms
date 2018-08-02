@@ -9,15 +9,11 @@ using Xamarin.Forms.Platform.iOS;
 namespace DrawIOForms.iOS.Renderers
 {
 
-    public class CreditCardEntryPageRenderer : PageRenderer
+    public class CreditCardEntryPageRenderer : PageRenderer, ICardIOPaymentViewControllerDelegate
     {
 
         private bool bViewAlreadyDisappeared = false;
         private CreditCardEntryPage ccPage;
-
-        public CreditCardEntryPageRenderer()
-        {
-        }
 
         protected override void OnElementChanged(VisualElementChangedEventArgs e)
         {
@@ -28,9 +24,15 @@ namespace DrawIOForms.iOS.Renderers
                 return;
             }
 
-            ccPage = e.NewElement as CreditCardEntryPage;
+            try
+            {
+                ccPage = e.NewElement as CreditCardEntryPage;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"\t\t\tERROR: {ex.Message}");
+            }
         }
-
 
         public override void ViewDidAppear(bool animated)
         {
@@ -40,11 +42,11 @@ namespace DrawIOForms.iOS.Renderers
             // by checking bViewAlreadyDisappeared.
             if (bViewAlreadyDisappeared) return;
 
-            var paymentDelegate = new CardIOPaymentViewControllerDg(ccPage);
+            //var paymentDelegate = new CardIOPaymentViewControllerDg(ccPage);
 
             // Create and Show the View Controller
-            var paymentViewController = new CardIOPaymentViewController(paymentDelegate);
-
+            //var paymentViewController = new CardIOPaymentViewController(paymentDelegate);
+            CardIOPaymentViewController paymentViewController = new CardIOPaymentViewController(this);
             paymentViewController.CollectExpiry = ccPage.cardIOConfig.RequireExpiry;
             paymentViewController.CollectCVV = ccPage.cardIOConfig.RequireCvv;
             paymentViewController.CollectPostalCode = ccPage.cardIOConfig.RequirePostalCode;
@@ -59,12 +61,14 @@ namespace DrawIOForms.iOS.Renderers
             // Not sure if this needs to be diabled, but it doesn't seem like something I want to do.
             paymentViewController.AllowFreelyRotatingCardGuide = false;
 
-
-
-
             // Display the card.io interface
             PresentViewController(paymentViewController, true, null);
 
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
         }
 
         public override void ViewDidDisappear(bool animated)
@@ -73,43 +77,30 @@ namespace DrawIOForms.iOS.Renderers
             bViewAlreadyDisappeared = true;
         }
 
-    }
-
-    public class CardIOPaymentViewControllerDg : CardIOPaymentViewControllerDelegate
-    {
-        private CreditCardEntryPage ccPage;
+        //private CreditCardEntryPage ccPage;
         private CreditCard_PCL ccPCL = new CreditCard_PCL();
 
-        public CardIOPaymentViewControllerDg(CreditCardEntryPage ccEntryPage)
+        public void UserDidCancelPaymentViewController(CardIOPaymentViewController paymentViewController)
         {
-            ccPage = ccEntryPage;
-        }
-
-        public override void UserDidCancelPaymentViewController(CardIOPaymentViewController paymentViewController)
-        {
-            // Console.WriteLine("Scanning Canceled!");
+            //App.Current
+            //this.DismissViewController(true, null);
             paymentViewController.DismissViewController(true, null);
-            // ccPage.OnScanCancelled();
-            Xamarin.Forms.MessagingCenter.Send<CreditCard_PCL>(ccPCL, "CreditCardScanCancelled");
         }
-        public override void UserDidProvideCreditCardInfo(CreditCardInfo card, CardIOPaymentViewController paymentViewController)
+        public void UserDidProvideCreditCardInfo(CreditCardInfo card, CardIOPaymentViewController paymentViewController)
         {
+            //this.DismissViewController(true, null);
             paymentViewController.DismissViewController(true, null);
 
             if (card == null)
             {
                 Console.WriteLine("Scanning Canceled!");
 
-                //ccPage.OnScanCancelled();
-
-
-                Xamarin.Forms.MessagingCenter.Send<CreditCard_PCL>(ccPCL, "CreditCardScanCancelled");
+                ccPage.OnScanCancelled();
+                //Xamarin.Forms.MessagingCenter.Send<CreditCard_PCL>(ccPCL, "CreditCardScanCancelled");
 
             }
             else
             {
-                //Console.WriteLine("Card Scanned: " + card.CardNumber);
-
                 // Feel free to extend the CreditCard_PCL object to include more than what's here.
                 ccPCL.cardNumber = card.CardNumber;
                 ccPCL.ccv = card.Cvv;
@@ -117,12 +108,12 @@ namespace DrawIOForms.iOS.Renderers
                 ccPCL.redactedCardNumber = card.RedactedCardNumber;
                 ccPCL.cardholderName = card.CardholderName;
 
-                //ccPage.OnScanSucceeded (ccPCL);
-                Xamarin.Forms.MessagingCenter.Send<CreditCard_PCL>(ccPCL, "CreditCardScanSuccess");
+                ccPage.OnScanSucceeded(ccPCL);
+                //Xamarin.Forms.MessagingCenter.Send<CreditCard_PCL>(ccPCL, "CreditCardScanSuccess");
 
             }
-
         }
+
 
     }
 

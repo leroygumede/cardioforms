@@ -5,6 +5,8 @@ using DrawIOForms.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Prism.Autofac;
+using System.Diagnostics;
+using System;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace DrawIOForms
@@ -32,7 +34,6 @@ namespace DrawIOForms
             containerRegistry.RegisterForNavigation<NavigationPage>();
             containerRegistry.RegisterForNavigation<MainPage>();
             containerRegistry.RegisterForNavigation<CreditCardEntryPage>();
-
         }
     }
 }

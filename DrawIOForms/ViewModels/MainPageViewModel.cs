@@ -5,6 +5,7 @@ namespace DrawIOForms.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
+
         private INavigationService _navigationService;
         public DelegateCommand ScanCardCommand { get; set; }
 
@@ -19,6 +20,7 @@ namespace DrawIOForms.ViewModels
 
         public async void OnClickScan()
         {
+
             await _navigationService.NavigateAsync("CreditCardEntryPage");
         }
     }

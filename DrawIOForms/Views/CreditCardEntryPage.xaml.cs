@@ -8,7 +8,13 @@ namespace DrawIOForms.Views
     {
         public CreditCardEntryPage()
         {
-            cardIOConfig = new CardIOConfig() { CollectCardholderName = true, HideCardIOLogo = false, RequireCvv = true, RequireExpiry = true };
+            cardIOConfig = new CardIOConfig()
+            {
+                CollectCardholderName = true,
+                HideCardIOLogo = false,
+                RequireCvv = true,
+                RequireExpiry = true
+            };
             InitializeComponent();
 
         }
@@ -27,6 +33,7 @@ namespace DrawIOForms.Views
             {
                 ScanSucceeded(this, ccPCL);
             }
+            Application.Current.MainPage.Navigation.PopAsync();
         }
 
         public void OnScanCancelled()
@@ -35,6 +42,7 @@ namespace DrawIOForms.Views
             {
                 ScanCancelled(this, EventArgs.Empty);
             }
+            Application.Current.MainPage.Navigation.PopAsync();
         }
     }
 }

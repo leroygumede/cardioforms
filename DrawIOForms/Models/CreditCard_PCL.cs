@@ -8,10 +8,6 @@ namespace DrawIOForms.Models
         public string expr;
         public string redactedCardNumber;
         public string cardholderName;
-
-        public CreditCard_PCL()
-        {
-        }
     }
 }
 

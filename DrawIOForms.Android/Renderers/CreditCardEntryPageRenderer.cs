@@ -1,11 +1,12 @@
-﻿using Android.App;
+﻿using System;
+using Android.App;
 using Android.Content;
+using Android.Runtime;
 using Card.IO;
+using DrawIOForms.Models;
 using DrawIOForms.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
-using System;
-using Android.Runtime;
 
 [assembly: ExportRenderer(typeof(CreditCardEntryPage), typeof(DrawIOForms.Droid.Renderers.CreditCardEntryPageRenderer))]
 namespace DrawIOForms.Droid.Renderers
@@ -55,6 +56,7 @@ namespace DrawIOForms.Droid.Renderers
 
             // Launch the Card.IO activity as soon as we go into the renderer.
 
+
             var intent = new Intent(activity, typeof(CardIOActivity));
             intent.PutExtra(CardIOActivity.ExtraRequireExpiry, ccPage.cardIOConfig.RequireExpiry);
             intent.PutExtra(CardIOActivity.ExtraRequireCvv, ccPage.cardIOConfig.RequireCvv);
@@ -74,7 +76,16 @@ namespace DrawIOForms.Droid.Renderers
             if (e.Data != null)
             {
                 var card = e.Data.GetParcelableExtra(CardIOActivity.ExtraScanResult).JavaCast<CreditCard>();
+
+                CreditCard_PCL ccPCL = new CreditCard_PCL();
+
+                ccPCL.ccv = card.Cvv;
+
+                ccPage.OnScanSucceeded(ccPCL);
+
                 Console.WriteLine($"Got result: {card.RedactedCardNumber}");
+
+
             }
         }
     }
