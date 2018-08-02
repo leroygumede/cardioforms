@@ -5,14 +5,14 @@ using DrawIOForms.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.iOS;
 
-[assembly: ExportRenderer(typeof(DrawIOForms.iOS.Renderers.CreditCardEntryPageRenderer), typeof(DrawIOForms.iOS.Renderers.CreditCardEntryPageRenderer))]
+[assembly: ExportRenderer(typeof(DrawIOForms.Views.CreditCardEntryPage), typeof(DrawIOForms.iOS.Renderers.CreditCardEntryPageRenderer))]
 namespace DrawIOForms.iOS.Renderers
 {
+
     public class CreditCardEntryPageRenderer : PageRenderer
     {
 
         private bool bViewAlreadyDisappeared = false;
-
         private CreditCardEntryPage ccPage;
 
         public CreditCardEntryPageRenderer()
@@ -22,6 +22,12 @@ namespace DrawIOForms.iOS.Renderers
         protected override void OnElementChanged(VisualElementChangedEventArgs e)
         {
             base.OnElementChanged(e);
+
+            if (e.OldElement != null || Element == null)
+            {
+                return;
+            }
+
             ccPage = e.NewElement as CreditCardEntryPage;
         }
 
@@ -48,8 +54,13 @@ namespace DrawIOForms.iOS.Renderers
             if (!string.IsNullOrEmpty(ccPage.cardIOConfig.Localization)) paymentViewController.LanguageOrLocale = ccPage.cardIOConfig.Localization;
             if (!string.IsNullOrEmpty(ccPage.cardIOConfig.ScanInstructions)) paymentViewController.ScanInstructions = ccPage.cardIOConfig.ScanInstructions;
 
+
+
             // Not sure if this needs to be diabled, but it doesn't seem like something I want to do.
             paymentViewController.AllowFreelyRotatingCardGuide = false;
+
+
+
 
             // Display the card.io interface
             PresentViewController(paymentViewController, true, null);
@@ -90,6 +101,8 @@ namespace DrawIOForms.iOS.Renderers
                 Console.WriteLine("Scanning Canceled!");
 
                 //ccPage.OnScanCancelled();
+
+
                 Xamarin.Forms.MessagingCenter.Send<CreditCard_PCL>(ccPCL, "CreditCardScanCancelled");
 
             }

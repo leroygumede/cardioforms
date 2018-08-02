@@ -55,7 +55,6 @@ namespace DrawIOForms.Droid.Renderers
 
             // Launch the Card.IO activity as soon as we go into the renderer.
 
-
             var intent = new Intent(activity, typeof(CardIOActivity));
             intent.PutExtra(CardIOActivity.ExtraRequireExpiry, ccPage.cardIOConfig.RequireExpiry);
             intent.PutExtra(CardIOActivity.ExtraRequireCvv, ccPage.cardIOConfig.RequireCvv);
@@ -72,15 +71,11 @@ namespace DrawIOForms.Droid.Renderers
 
         void Activity_ActivityResult(object sender, ActivityResultEventArgs e)
         {
-
             if (e.Data != null)
             {
-
                 var card = e.Data.GetParcelableExtra(CardIOActivity.ExtraScanResult).JavaCast<CreditCard>();
                 Console.WriteLine($"Got result: {card.RedactedCardNumber}");
             }
-
-
         }
     }
 }
